@@ -336,4 +336,17 @@ export const CosmosWalletRegistry: CosmosRegistryWallet[] = [
     },
     features: [],
   },
+  {
+    name: "keplr-ewallet",
+    prettyName: "Keplr eWallet",
+    logo: "/wallets/keplr.svg",
+    mode: "extension" as const,
+    mobileDisabled: false,
+    lazyInstall: () =>
+      import("~/integrations/keplr-ewallet").then((m) => m.KeplrEwalletWallet),
+    windowPropertyName: "",
+    stakeUrl: "https://wallet.keplr.app/chains/osmosis?tab=staking",
+    governanceUrl: "https://wallet.keplr.app/chains/osmosis?tab=governance",
+    features: ["notifications"],
+  },
 ];
