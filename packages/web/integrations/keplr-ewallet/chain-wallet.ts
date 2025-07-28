@@ -36,8 +36,10 @@ export class ChainKeplrEwallet extends ChainWalletBase {
     try {
       this.setState(State.Pending);
 
-      await this.mainWallet.init();
-      await this.mainWallet.connect();
+      // Ensure mainWallet is properly initialized and connected
+      if (!this.mainWallet.eWallet || !this.mainWallet.cosmosEWallet) {
+        await this.mainWallet.connect();
+      }
 
       if (!this.mainWallet.cosmosEWallet) {
         throw new Error("Cosmos ewallet not available");
@@ -49,7 +51,16 @@ export class ChainKeplrEwallet extends ChainWalletBase {
         throw new Error("Chain ID not available");
       }
 
-      const account = await this.mainWallet.cosmosEWallet.getKey(chainId);
+      // Try to get account, if it fails due to missing key, the ewallet will handle key generation
+      let account;
+      try {
+        account = await this.mainWallet.cosmosEWallet.getKey(chainId);
+      } catch (error) {
+        // If getKey fails, it might be due to authentication or missing key
+        // Try to reconnect and retry once
+        await this.mainWallet.connect();
+        account = await this.mainWallet.cosmosEWallet.getKey(chainId);
+      }
 
       this._accountData = {
         address: account.bech32Address,
@@ -76,6 +87,11 @@ export class ChainKeplrEwallet extends ChainWalletBase {
     signDoc: StdSignDoc,
     signOptions?: SignOptions
   ): Promise<AminoSignResponse> {
+    // Ensure wallet is connected before signing
+    if (!this.mainWallet.cosmosEWallet) {
+      await this.connect();
+    }
+
     if (!this.mainWallet.cosmosEWallet) {
       throw new Error("Cosmos ewallet not available");
     }
@@ -84,12 +100,12 @@ export class ChainKeplrEwallet extends ChainWalletBase {
     if (!chainId) {
       throw new Error("Chain ID not available");
     }
-    return (await this.mainWallet.cosmosEWallet.signAmino(
+    return await this.mainWallet.cosmosEWallet.signAmino(
       chainId,
       signerAddress,
       signDoc,
       signOptions
-    )) as AminoSignResponse;
+    );
   }
 
   async signDirect(
@@ -97,6 +113,11 @@ export class ChainKeplrEwallet extends ChainWalletBase {
     signDoc: DirectSignDoc,
     signOptions?: SignOptions
   ): Promise<DirectSignResponse> {
+    // Ensure wallet is connected before signing
+    if (!this.mainWallet.cosmosEWallet) {
+      await this.connect();
+    }
+
     if (!this.mainWallet.cosmosEWallet) {
       throw new Error("Cosmos ewallet not available");
     }
@@ -105,18 +126,21 @@ export class ChainKeplrEwallet extends ChainWalletBase {
     if (!chainId) {
       throw new Error("Chain ID not available");
     }
-    return (await this.mainWallet.cosmosEWallet.signDirect(
+
+    return await this.mainWallet.cosmosEWallet.signDirect(
       chainId,
       signerAddress,
-      signDoc as any,
+      signDoc,
       signOptions
-    )) as DirectSignResponse;
+    );
   }
 
-  async signArbitrary(
-    signerAddress: string,
-    data: string | Uint8Array
-  ): Promise<any> {
+  async signArbitrary(signerAddress: string, data: string | Uint8Array) {
+    // Ensure wallet is connected before signing
+    if (!this.mainWallet.cosmosEWallet) {
+      await this.connect();
+    }
+
     if (!this.mainWallet.cosmosEWallet) {
       throw new Error("Cosmos ewallet not available");
     }
@@ -125,11 +149,11 @@ export class ChainKeplrEwallet extends ChainWalletBase {
     if (!chainId) {
       throw new Error("Chain ID not available");
     }
-    return (await this.mainWallet.cosmosEWallet.signArbitrary(
+    return await this.mainWallet.cosmosEWallet.signArbitrary(
       chainId,
       signerAddress,
       data
-    )) as any;
+    );
   }
 
   async verifyArbitrary(
@@ -137,6 +161,11 @@ export class ChainKeplrEwallet extends ChainWalletBase {
     data: string | Uint8Array,
     signature: any
   ): Promise<boolean> {
+    // Ensure wallet is connected before signing
+    if (!this.mainWallet.cosmosEWallet) {
+      await this.connect();
+    }
+
     if (!this.mainWallet.cosmosEWallet) {
       throw new Error("Cosmos ewallet not available");
     }
@@ -163,5 +192,9 @@ export class ChainKeplrEwallet extends ChainWalletBase {
 
   removeAllListeners() {
     // Event handling placeholder
+  }
+
+  get client() {
+    return this.mainWallet;
   }
 }

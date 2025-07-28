@@ -1,3 +1,4 @@
+import { StdSignDoc } from "@cosmjs/amino";
 import { ChainRecord, Wallet } from "@cosmos-kit/core";
 import { MainWalletBase } from "@cosmos-kit/core";
 import type { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
@@ -18,12 +19,17 @@ export class KeplrEwalletWallet extends MainWalletBase {
 
     super(walletInfo, ChainWalletConstructor as any);
 
-    // Set mainWallet reference for chain wallets
+    // Set mainWallet reference after construction
+    this.setMainWalletReferences();
+  }
+
+  private setMainWalletReferences() {
+    // Override getChainWallet to set mainWallet reference
     const originalGetChainWallet = this.getChainWallet;
     this.getChainWallet = (chainName: string) => {
-      const chainWallet = originalGetChainWallet.call(this, chainName);
-      if (chainWallet && (chainWallet as any).mainWallet === null) {
-        (chainWallet as any).mainWallet = this;
+      const chainWallet = originalGetChainWallet.call(this, chainName) as any;
+      if (chainWallet && !chainWallet.mainWallet) {
+        chainWallet.mainWallet = this;
       }
       return chainWallet;
     };
@@ -33,7 +39,9 @@ export class KeplrEwalletWallet extends MainWalletBase {
     try {
       this.initingClient();
       await this.init();
-      this.initClientDone(undefined);
+
+      // Set this as the client - required by cosmos-kit
+      this.initClientDone(this as any);
     } catch (error) {
       this.initClientError(
         error instanceof Error ? error : new Error("Unknown error")
@@ -47,7 +55,9 @@ export class KeplrEwalletWallet extends MainWalletBase {
       const { initKeplrEwalletCore } = await import(
         "@keplr-ewallet/ewallet-sdk-core"
       );
-      const result = await initKeplrEwalletCore({});
+      const result = await initKeplrEwalletCore({
+        customerId: "afb0afd1-d66d-4531-981c-cbf3fb1507b9",
+      });
 
       if (result && result.success) {
         this.eWallet = result.data;
@@ -64,7 +74,15 @@ export class KeplrEwalletWallet extends MainWalletBase {
     }
   }
 
-  connect = async (_sync?: boolean) => {
+  connect = async (
+    syncOrChainIds?: boolean | string | string[],
+    options?: any
+  ) => {
+    // Ensure client is initialized first
+    if (this.state === "Init") {
+      await this.initClient();
+    }
+
     await this.init();
 
     if (!this.eWallet) {
@@ -136,5 +154,56 @@ export class KeplrEwalletWallet extends MainWalletBase {
 
   removeAllListeners() {
     // Event handling placeholder
+  }
+
+  async getSimpleAccount(chainId: string) {
+    if (!this.cosmosEWallet) {
+      await this.init();
+      if (!this.cosmosEWallet) {
+        throw new Error("Cosmos ewallet not available");
+      }
+    }
+
+    const account = await this.cosmosEWallet.getKey(chainId);
+    return {
+      namespace: "cosmos",
+      chainId,
+      address: account.bech32Address,
+      username: account.name,
+    };
+  }
+
+  getOfflineSigner(chainId: string) {
+    if (!this.cosmosEWallet) {
+      throw new Error("Cosmos ewallet not available");
+    }
+
+    const cosmosEWallet = this.cosmosEWallet;
+    return {
+      getAccounts: async () => {
+        const account = await cosmosEWallet.getKey(chainId);
+        return [
+          {
+            address: account.bech32Address,
+            algo: account.algo as any,
+            pubkey: account.pubKey,
+          },
+        ];
+      },
+      signAmino: async (signerAddress: string, signDoc: StdSignDoc) => {
+        return await cosmosEWallet.signAmino(chainId, signerAddress, signDoc);
+      },
+      signDirect: async (signerAddress: string, signDoc: any) => {
+        return await cosmosEWallet.signDirect(chainId, signerAddress, signDoc);
+      },
+    };
+  }
+
+  getOfflineSignerAmino(chainId: string) {
+    return this.getOfflineSigner(chainId);
+  }
+
+  getOfflineSignerDirect(chainId: string) {
+    return this.getOfflineSigner(chainId);
   }
 }
