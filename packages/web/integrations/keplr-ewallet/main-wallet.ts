@@ -56,7 +56,7 @@ export class KeplrEwalletWallet extends MainWalletBase {
         "@keplr-ewallet/ewallet-sdk-core"
       );
       const result = await initKeplrEwalletCore({
-        customerId: "afb0afd1-d66d-4531-981c-cbf3fb1507b9",
+        customerId: "b2c1bfd2-e77e-5642-092d-dcf4gc2618ca",
       });
 
       if (result && result.success) {
@@ -96,6 +96,9 @@ export class KeplrEwalletWallet extends MainWalletBase {
     if (this.eWallet) {
       await this.eWallet.signOut();
     }
+
+    this.eWallet = null;
+    this.cosmosEWallet = null;
     this.chainWalletMap.clear();
   };
 

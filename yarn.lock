@@ -3650,19 +3650,19 @@
   resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.4.0.tgz#08d6c5e20cf7e4cc02fd181c4b0c225cd31dbb60"
   integrity sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==
 
-"@keplr-ewallet/ewallet-sdk-core@0.0.6-rc.0":
-  version "0.0.6-rc.0"
-  resolved "https://registry.yarnpkg.com/@keplr-ewallet/ewallet-sdk-core/-/ewallet-sdk-core-0.0.6-rc.0.tgz#25bdd568550489b4879f5ceb0edf58fc16f3faa6"
-  integrity sha512-q4WPmBPuZSN0q6oKO0LcRkOJ6WXrg1lfx2EbLPHycqygLbTXi0aHiyGNfTVi1Ee1q7nVTlulIskZKOIwv1sJEA==
-
-"@keplr-ewallet/ewallet-sdk-cosmos@0.0.6-rc.1":
+"@keplr-ewallet/ewallet-sdk-core@0.0.6-rc.1", "@keplr-ewallet/ewallet-sdk-core@^0.0.6-rc.1":
   version "0.0.6-rc.1"
-  resolved "https://registry.yarnpkg.com/@keplr-ewallet/ewallet-sdk-cosmos/-/ewallet-sdk-cosmos-0.0.6-rc.1.tgz#1599f170a83f6e04dfaa191ba7aa0c732ab1d25a"
-  integrity sha512-K82esPrLaWvzf6I6pmNWk4LIfHbJVYg5uTVvOqRhxGCPxYbr02JyAl1Qa51rEFy8OwVs72cx1s+mMXnHfftCUA==
+  resolved "https://registry.yarnpkg.com/@keplr-ewallet/ewallet-sdk-core/-/ewallet-sdk-core-0.0.6-rc.1.tgz#8618c32968941e947f44490d00e1c7b082a3e223"
+  integrity sha512-Hyy6t1Ic/m04vjTKOP+MxIyMchhwf3l9qv1znrEZDulTYLnATRdlr++nn9SlfNzNtQiWEoMOHrGSTkrr83zBKw==
+
+"@keplr-ewallet/ewallet-sdk-cosmos@0.0.6-rc.2":
+  version "0.0.6-rc.2"
+  resolved "https://registry.yarnpkg.com/@keplr-ewallet/ewallet-sdk-cosmos/-/ewallet-sdk-cosmos-0.0.6-rc.2.tgz#f4fadb2077c16144c25e5780444fb6922dff1e11"
+  integrity sha512-01ygTV5paVgChxGgf4C/l1Wo+LJIGSjn0DjK+7vt+55CnjCUG02ayZzt8LW8SVbSfgerFzzUE8lcqN9GRD/oqQ==
   dependencies:
     "@cosmjs/amino" "^0.33.1"
     "@cosmjs/proto-signing" "^0.33.1"
-    "@keplr-ewallet/ewallet-sdk-core" "0.0.6-rc.0"
+    "@keplr-ewallet/ewallet-sdk-core" "^0.0.6-rc.1"
     "@keplr-wallet/common" "^0.12.253"
     "@keplr-wallet/cosmos" "^0.12.253"
     "@keplr-wallet/crypto" "^0.12.253"
