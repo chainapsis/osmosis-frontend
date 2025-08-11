@@ -56,7 +56,7 @@ export class KeplrEwalletWallet extends MainWalletBase {
         "@keplr-ewallet/ewallet-sdk-core"
       );
       const result = await initKeplrEwalletCore({
-        customerId: "b2c1bfd2-e77e-5642-092d-dcf4gc2618ca",
+        customer_id: "b2c1bfd2-e77e-5642-092d-dcf4gc2618ca",
       });
 
       if (result && result.success) {
@@ -70,7 +70,9 @@ export class KeplrEwalletWallet extends MainWalletBase {
       const { initCosmosEWallet } = await import(
         "@keplr-ewallet/ewallet-sdk-cosmos"
       );
-      this.cosmosEWallet = await initCosmosEWallet({ eWallet: this.eWallet });
+      this.cosmosEWallet = await initCosmosEWallet({
+        customer_id: "b2c1bfd2-e77e-5642-092d-dcf4gc2618ca",
+      });
     }
   }
 
