@@ -229,13 +229,13 @@ export class AccountStore<Injects extends Record<string, any>[] = []> {
 
   private _createWalletManager(wallets: MainWalletBase[]) {
     this._walletManager = new WalletManager(
-      this.chains,
+      this.chains as any,
       wallets,
       logger,
       true,
       true,
       ["https://daodao.zone", "https://dao.daodao.zone"],
-      this.walletManagerAssets,
+      this.walletManagerAssets as any,
       "icns",
       this.options.walletConnectOptions,
       undefined,
