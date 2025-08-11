@@ -216,33 +216,12 @@ export const AssetsOverview: FunctionComponent<
   const { selectedDifferencePricePretty, selectedPercentageRatePretty } =
     calculatePortfolioPerformance(portfolioOverTimeData, dataPoint);
 
-  const formattedDate = useMemo(() => {
-    if (!dataPoint.time || typeof dataPoint.time !== "number") {
-      return undefined;
-    }
-
-    try {
-      const date = dayjs(dataPoint.time * 1000);
-      const formatString =
-        range === "1d" || range === "7d" || range === "1mo" ? "lll" : "ll";
-
-      // Safe format call with fallback
-      if (typeof date.format === "function") {
-        return date.format(formatString);
-      } else {
-        // Fallback to native Date formatting if dayjs format is not available
-        const nativeDate = new Date(dataPoint.time * 1000);
-        return (
-          nativeDate.toLocaleDateString() +
-          " " +
-          nativeDate.toLocaleTimeString()
-        );
-      }
-    } catch (error) {
-      console.warn("Date formatting error:", error);
-      return new Date(dataPoint.time * 1000).toLocaleString();
-    }
-  }, [dataPoint.time, range]);
+  const formattedDate =
+    dataPoint.time && typeof dataPoint.time === "number"
+      ? dayjs(dataPoint.time * 1000).format(
+          range === "1d" || range === "7d" || range === "1mo" ? "lll" : "ll"
+        )
+      : undefined;
 
   const totalDisplayValue =
     dataPoint.value !== undefined
