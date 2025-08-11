@@ -127,10 +127,26 @@ export class ChainKeplrEwallet extends ChainWalletBase {
       throw new Error("Chain ID not available");
     }
 
+    if (
+      !signDoc.bodyBytes ||
+      !signDoc.authInfoBytes ||
+      !signDoc.chainId ||
+      signDoc.accountNumber === null
+    ) {
+      throw new Error("Invalid sign document: missing required fields");
+    }
+
+    const compatibleSignDoc = {
+      bodyBytes: signDoc.bodyBytes,
+      authInfoBytes: signDoc.authInfoBytes,
+      chainId: signDoc.chainId,
+      accountNumber: signDoc.accountNumber,
+    };
+
     return await this.mainWallet.cosmosEWallet.signDirect(
       chainId,
       signerAddress,
-      signDoc,
+      compatibleSignDoc,
       signOptions
     );
   }
