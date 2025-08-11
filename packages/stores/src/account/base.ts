@@ -229,13 +229,18 @@ export class AccountStore<Injects extends Record<string, any>[] = []> {
 
   private _createWalletManager(wallets: MainWalletBase[]) {
     this._walletManager = new WalletManager(
-      this.chains,
+      this.chains.map((chain) => ({
+        ...chain,
+        chain_type: (chain as any).chain_type || "cosmos",
+      })) as unknown as ConstructorParameters<typeof WalletManager>[0],
       wallets,
       logger,
       true,
       true,
       ["https://daodao.zone", "https://dao.daodao.zone"],
-      this.walletManagerAssets,
+      this.walletManagerAssets as unknown as ConstructorParameters<
+        typeof WalletManager
+      >[6],
       "icns",
       this.options.walletConnectOptions,
       undefined,
