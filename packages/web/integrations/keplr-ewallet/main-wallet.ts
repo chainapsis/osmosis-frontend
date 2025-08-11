@@ -77,8 +77,8 @@ export class KeplrEwalletWallet extends MainWalletBase {
   }
 
   connect = async (
-    syncOrChainIds?: boolean | string | string[],
-    options?: any
+    _syncOrChainIds?: boolean | string | string[],
+    _options?: any
   ) => {
     // Ensure client is initialized first
     if (this.state === "Init") {
