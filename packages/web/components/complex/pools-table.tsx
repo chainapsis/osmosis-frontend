@@ -231,7 +231,7 @@ export const PoolsTable = (props: PropsWithChildren<PoolsTableProps>) => {
               />
             ),
           }
-        ) as unknown as (typeof allColumns)[number]
+        ) as (typeof allColumns)[number]
       );
     }
 
@@ -252,7 +252,7 @@ export const PoolsTable = (props: PropsWithChildren<PoolsTableProps>) => {
             />
           ),
         }
-      ) as unknown as (typeof allColumns)[number]
+      ) as (typeof allColumns)[number]
     );
 
     // Only show fees if more than half of the pools have fees data.
@@ -274,7 +274,7 @@ export const PoolsTable = (props: PropsWithChildren<PoolsTableProps>) => {
               />
             ),
           }
-        ) as unknown as (typeof allColumns)[number]
+        ) as (typeof allColumns)[number]
       );
     }
 
