@@ -83,5 +83,8 @@
     "@keplr-wallet/router": "0.10.24-ibc.go.v7.hot.fix",
     "@keplr-wallet/types": "0.10.24-ibc.go.v7.hot.fix",
     "@noble/hashes": "1.8.0"
+  },
+  "overrides": {
+    "@noble/hashes": "1.8.0"
   }
 }
