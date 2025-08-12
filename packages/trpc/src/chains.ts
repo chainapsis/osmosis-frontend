@@ -24,7 +24,7 @@ export const chainsRouter = createTRPCRouter({
         chainId: z.number(),
       })
     )
-    .query(({ input: { chainId } }) =>
+    .query(({ input: { chainId } }): any =>
       EthereumChainInfo.find((chain) => chain.id === chainId)
     ),
 });
