@@ -2,6 +2,7 @@ import {
   type ChainName,
   type DisconnectOptions,
   MainWalletBase,
+  State,
 } from "@cosmos-kit/core";
 import { OkoCosmosWallet } from "@oko-wallet/oko-sdk-cosmos";
 
@@ -73,11 +74,15 @@ export class OkoMainWallet extends MainWalletBase {
     exclude?: ChainName,
     options?: DisconnectOptions
   ): Promise<void> {
-    await super.disconnectAll(activeOnly, exclude, options);
-
     if (this.client) {
       const okoClient = this.client as OkoWalletClient;
       await okoClient.client.okoWallet.signOut();
     }
+
+    await super.disconnectAll(activeOnly, exclude, options);
+
+    // Reset client state to Init to force re-initialization on next connect
+    this.clientMutable.data = undefined;
+    this.clientMutable.state = State.Init;
   }
 }
