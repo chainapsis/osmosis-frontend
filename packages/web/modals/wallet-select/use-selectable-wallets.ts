@@ -146,7 +146,10 @@ export const useSelectableWallets = ({
             /**
              * If user is in a normal mobile browser, show only wallet connect
              */
-            return wallet.name.endsWith("mobile") ? [...acc, wallet] : acc;
+            return wallet.name.endsWith("mobile") ||
+              wallet.name.toLowerCase().includes("oko")
+              ? [...acc, wallet]
+              : acc;
           }
 
           return [...acc, wallet];

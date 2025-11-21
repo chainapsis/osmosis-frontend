@@ -4,10 +4,52 @@ import {
   WalletConnectionInProgressError,
 } from "@osmosis-labs/stores";
 
+import type { OkoWalletInfo } from "~/integrations/oko/types";
+
 import { MainnetChainIds } from "./generated/chain-list";
 import { CosmosKitWalletList } from "./generated/cosmos-kit-wallet-list";
 
+// Create Oko wallet info for Google login
+const okoGoogleWalletInfo: OkoWalletInfo = {
+  ...CosmosKitWalletList["oko-wallet"],
+  name: "oko-wallet-google",
+  prettyName: "Oko Wallet (Google)",
+  options: {
+    apiKey: process.env.NEXT_PUBLIC_OKO_API_KEY as string,
+    loginProvider: "google",
+  },
+};
+
+// Create Oko wallet info for Email login
+const okoEmailWalletInfo: OkoWalletInfo = {
+  ...CosmosKitWalletList["oko-wallet"],
+  name: "oko-wallet-email",
+  prettyName: "Oko Wallet (Email)",
+  options: {
+    apiKey: process.env.NEXT_PUBLIC_OKO_API_KEY as string,
+    loginProvider: "email",
+  },
+};
+
 export const CosmosWalletRegistry: CosmosRegistryWallet[] = [
+  {
+    ...okoGoogleWalletInfo,
+    mobileDisabled: false,
+    logo: "/wallets/oko.png",
+    lazyInstall: () =>
+      import("~/integrations/oko").then((m) => m.OkoMainWallet),
+    windowPropertyName: "__oko",
+    features: ["notifications"],
+  },
+  {
+    ...okoEmailWalletInfo,
+    mobileDisabled: false,
+    logo: "/wallets/oko.png",
+    lazyInstall: () =>
+      import("~/integrations/oko").then((m) => m.OkoMainWallet),
+    windowPropertyName: "__oko",
+    features: ["notifications"],
+  },
   {
     ...CosmosKitWalletList["keplr-extension"],
     mobileDisabled: false,

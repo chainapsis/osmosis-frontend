@@ -16,6 +16,8 @@ import { xdefiExtensionInfo } from "@cosmos-kit/xdefi-extension";
 import { isFunction } from "@osmosis-labs/utils";
 import * as prettier from "prettier";
 
+import { okoWalletInfo } from "~/integrations/oko/registry";
+
 type UpdateWalletMode =
   | "ledger"
   | "extension"
@@ -28,6 +30,7 @@ interface Wallet extends Omit<DefaultWallet, "mode"> {
 }
 
 const CosmosKitWalletList: Wallet[] = [
+  okoWalletInfo,
   keplrExtensionInfo,
   keplrMobileInfo,
   leapExtensionInfo,
