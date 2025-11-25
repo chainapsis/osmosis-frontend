@@ -13,10 +13,9 @@ import { OkxwalletExtensionInfo as okxWalletExtensionInfo } from "@cosmos-kit/ok
 import { stationExtensionInfo } from "@cosmos-kit/station-extension";
 import { trustExtensionInfo } from "@cosmos-kit/trust-extension";
 import { xdefiExtensionInfo } from "@cosmos-kit/xdefi-extension";
+import { okoWalletInfo } from "@oko-wallet/oko-cosmos-kit";
 import { isFunction } from "@osmosis-labs/utils";
 import * as prettier from "prettier";
-
-import { okoWalletInfo } from "~/integrations/oko/registry";
 
 type UpdateWalletMode =
   | "ledger"
