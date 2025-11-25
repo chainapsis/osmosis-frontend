@@ -2,8 +2,6 @@
 
 ![osmosis-banner-1200w](https://user-images.githubusercontent.com/4606373/167008669-fb3cafa8-e66e-4cdf-8599-3308039cc58c.png)
 
-> Note: this codebase is currently undergoing a refactor from Keplr's architecture to a tRPC stack to improve performance, maintainability, and development speed. We appreciate your patience as we work through these changes.
-
 ## Overview 💻
 
 Our [frontend](https://app.osmosis.zone) is built with the following tools:
